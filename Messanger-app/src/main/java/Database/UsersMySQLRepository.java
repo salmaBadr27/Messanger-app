@@ -20,13 +20,15 @@ public class UsersMySQLRepository extends UserRepository {
     public User getUserByUsername(String username) {
 
         try {
-            String query = "select*from users where User_Name = '" + username + "'";
+            String query = "select*from user where User_Name = '" + username + "'";
             result = statement.executeQuery(query);
             while (result.next()) {
                 String User_id = result.getString("user_id");
                 String User_Name = result.getString("User_Name");
                 String password = result.getString("password");
-                User realUser = new User(User_id, User_Name, password);
+                String email = result.getString("E_mail");
+                String mobile = result.getString("Mobile");
+                User realUser = new User(User_id, User_Name, password, email, mobile);
                 return realUser;
 
             }
@@ -38,12 +40,12 @@ public class UsersMySQLRepository extends UserRepository {
     }
 
     @Override
-    public User addUser(String userName, String password) {
+    public User addUser(String userName, String password, String email, String phone) {
 
         try {
             String User_id = UUID.randomUUID().toString();
-            statement.executeUpdate("INSERT INTO users (user_id, User_Name , password) VALUES ('" + User_id + "' , '" + userName + "' , '" + password + "')");
-            User realUser = new User(User_id, userName, password);
+            statement.executeUpdate("INSERT INTO user (user_id, User_Name , password, E_mail, Mobile) VALUES ('"+ User_id +"' , '"+userName+"' , '"+password+"',  '"+ email +"' , '"+ phone+"')");
+            User realUser = new User(User_id, userName, password, email, phone);
             return realUser;
 
         } catch (Exception e) {
@@ -57,14 +59,14 @@ public class UsersMySQLRepository extends UserRepository {
     public User removeUserByUserName(String username) {
         try {
 
-            String query = "select *from users where User_Name = '" + username + "'";
+            String query = "select *from user where User_Name = '" + username + "'";
             result = statement.executeQuery(query);
             while (result.next()) {
                 String userName = result.getString("User_Name");
                 String pass = result.getString("password");
                 User deletedUser = new User(userName, pass);
                 if (username.equals(userName)) {
-                    statement.executeUpdate("Delete from users where User_Name = '" + username + "'");
+                    statement.executeUpdate("Delete from user where User_Name = '" + username + "'");
                     statement.executeUpdate("Delete from messages where sender = '" + username + "' or receiver = '" + username + "'");
                     return deletedUser;
                 }
@@ -81,7 +83,7 @@ public class UsersMySQLRepository extends UserRepository {
     public ArrayList<User> getAllUsers() {
         ArrayList allUsers = new ArrayList();
         try {
-            String query = "select * from users";
+            String query = "select * from user";
             result = statement.executeQuery(query);
             while (result.next()) {
                 String userName = result.getString("User_Name");

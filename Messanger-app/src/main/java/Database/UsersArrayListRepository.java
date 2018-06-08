@@ -1,6 +1,5 @@
 package Database;
 
-import Utility.Authentication;
 import Models.User;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -25,7 +24,7 @@ public class UsersArrayListRepository extends UserRepository {
     }
 
     @Override
-    public User addUser(String userName, String password) {
+    public User addUser(String userName, String password,String email , String phone) {
         for (User user : allUsers) {
             if (user.getUserName().equals(userName)) {
                 return null;

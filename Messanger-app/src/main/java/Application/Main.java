@@ -10,6 +10,27 @@ import static spark.Spark.*;
 public class Main {
 
     public static void main(String args[]) {
+        options("/*",
+                (request, response) -> {
+
+                    String accessControlRequestHeaders = request
+                            .headers("Access-Control-Request-Headers");
+                    if (accessControlRequestHeaders != null) {
+                        response.header("Access-Control-Allow-Headers",
+                                accessControlRequestHeaders);
+                    }
+
+                    String accessControlRequestMethod = request
+                            .headers("Access-Control-Request-Method");
+                    if (accessControlRequestMethod != null) {
+                        response.header("Access-Control-Allow-Methods",
+                                accessControlRequestMethod);
+                    }
+
+                    return "OK";
+                });
+
+        before((request, response) -> response.header("Access-Control-Allow-Origin", "*"));
 
         Gson gson = new Gson();
         DBConnection dbConnection = new DBConnection();
@@ -22,27 +43,37 @@ public class Main {
         //-------------------------
         //login 
         post("/login", (req, res) -> {
-            String userinfo = req.body();
-            User realUser = auth.AuthenticateWithJson(userMySQLRepository, userinfo);
-            if (realUser == null) {
-                return "not user ? sign up now";
+            try {
+                String userinfo = req.body();
+                User realUser = auth.AuthenticateWithJson(userMySQLRepository, userinfo);
+                System.out.print(realUser);
+                if (realUser == null) {
+                    res.status(401);
+                    return "not user ? sign up now";
+                }
+                String token = auth.generateToken(userinfo);
+//                res.header("token", token);
+//                res.header("Access-Control-Allow-Origin", "http://localhost:4567");
+//                res.header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
+//                res.header("Access-Control-Allow-Origin", "Content-Type, Authorization, Content-Length, X-Requested-With");
+//                res.header("Access-Control-Allow-Credentials", "true");
+                return token;
+            } catch (Exception ex) {
+                return ex;
             }
-            String token = auth.generateToken(userinfo);
-            res.header("token", token);
-            return gson.toJson(realUser);
-
         });
         // sign up 
         post("/Signup", (req, res) -> {
             String userinfo = req.body();
             User fakeUser = gson.fromJson(userinfo, User.class);
-            User newUser = userMySQLRepository.addUser(fakeUser.getUserName(), fakeUser.getPassword());
+            User newUser = userMySQLRepository.addUser(fakeUser.getUserName(), fakeUser.getPassword(), fakeUser.getE_mail(), fakeUser.getMobileNum());
             if (newUser == null) {
+                res.status(401);
                 return " user name exist";
             }
             String token = auth.generateToken(userinfo);
             res.header("token", token);
-            return gson.toJson(newUser);
+            return token;
         });
 
 //        delete user by user name 
@@ -65,16 +96,22 @@ public class Main {
 
         //get allusers
         get("/Users", (req, res) -> {
-            String token = req.headers("Authentication");
-            User isUser = auth.AuthenticateWithToken(userMySQLRepository, token);
-            if (isUser == null) {
-                return "unauthenticated";
+            try {
+                String token = req.headers("Authentication");
+                System.out.println("token : " + token);
+                User isUser = auth.AuthenticateWithToken(userMySQLRepository, token);
+                System.out.println("isUser : " + isUser);
+                if (isUser == null) {
+                    return "unauthenticated";
+                }
+                ArrayList<User> allUsers = userMySQLRepository.getAllUsers();
+                if (allUsers == null) {
+                    return "there is no users";
+                }
+                return gson.toJson(allUsers);
+            } catch (Exception e) {
+                return e;
             }
-            ArrayList<User> allUsers = userMySQLRepository.getAllUsers();
-            if (allUsers == null) {
-                return "there is no users";
-            }
-            return gson.toJson(allUsers);
 
         });
 
@@ -140,6 +177,7 @@ public class Main {
         //get all messages by user name
         get("/Messages", (req, res) -> {
             String token = req.headers("Authentication");
+            System.out.print("token"+token);
             User isUser = auth.AuthenticateWithToken(userMySQLRepository, token);
             if (isUser == null) {
                 res.status(401);
@@ -147,6 +185,7 @@ public class Main {
             }
             String userName = isUser.getUserName();
             ArrayList<Message> allMessages = msgMYSQLRepository.getAllMessages(userName);
+            System.out.print("messages"+gson.toJson(allMessages));
             return gson.toJson(allMessages);
 
         });
