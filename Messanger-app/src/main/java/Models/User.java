@@ -56,6 +56,7 @@ public class User {
     public void setPassword(String Password) {
         this.password = Password;
     }
-    
-
+    public String toString(){
+        return "user name=>"+ this.getUserName()+",password=>"+this.getPassword()+",email=>"+this.getE_mail()+",phone=>"+this.getMobileNum();
+    }
 }

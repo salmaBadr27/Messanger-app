@@ -26,7 +26,9 @@ public class MessagesMySQLRepository extends MessageRepository {
                 String msgBody = result.getString("Msg_body");
                 String sender = result.getString("sender");
                 String receiver = result.getString("receiver");
-                Message message = new Message(msgBody, sender, receiver);
+                String created_at = result.getString("created_at");
+
+                Message message = new Message(msgBody, sender, receiver,created_at);
                 totalMessages.add(message);
             }
 
@@ -42,8 +44,9 @@ public class MessagesMySQLRepository extends MessageRepository {
 
         try {
             String msgid = UUID.randomUUID().toString();
-            Message newMsg = new Message(body, msgsender, msgreceiver);
-            statement.executeUpdate("INSERT INTO messages (Msg_Id, msg_body, sender, receiver) VALUES ('" + msgid + "','" + body + "','" + msgsender + "','" + msgreceiver + "')");
+            Timestamp created_at = new Timestamp(System.currentTimeMillis());
+            Message newMsg = new Message(body, msgsender, msgreceiver,created_at);
+            statement.executeUpdate("INSERT INTO messages (Msg_Id, msg_body, sender, receiver,created_at) VALUES ('" + msgid + "','" + body + "','" + msgsender + "','" + msgreceiver + "','"+created_at+"')");
             return newMsg;
         } catch (Exception ex) {
 
@@ -63,7 +66,8 @@ public class MessagesMySQLRepository extends MessageRepository {
                 String msgBody = result.getString("Msg_body");
                 String msgSender = result.getString("sender");
                 String msgReceiver = result.getString("receiver");
-                Message sendedMesage = new Message(msgBody, msgSender, msgReceiver);
+                String created_at = result.getString("created_at");
+                Message sendedMesage = new Message(msgBody, msgSender, msgReceiver,created_at);
                 totalMessages.add(sendedMesage);
             }
 
@@ -84,7 +88,8 @@ public class MessagesMySQLRepository extends MessageRepository {
                 String msgBody = result.getString("Msg_body");
                 String msgSender = result.getString("sender");
                 String msgReceiver = result.getString("receiver");
-                Message receivedMessage = new Message(msgBody, msgSender, msgReceiver);
+                String created_at = result.getString("created_at");
+                Message receivedMessage = new Message(msgBody, msgSender, msgReceiver,created_at);
                 totalMessages.add(receivedMessage);
             }
 
@@ -106,7 +111,8 @@ public class MessagesMySQLRepository extends MessageRepository {
                 String msgBody = result.getString("Msg_body");
                 String msgSender = result.getString("sender");
                 String msgReceiver = result.getString("receiver");
-                Message sendedMessage = new Message(msgBody, msgSender, msgReceiver);
+                String created_at = result.getString("created_at");
+                Message sendedMessage = new Message(msgBody, msgSender, msgReceiver,created_at);
                 deletedMessages.add(sendedMessage);
             }
             statement.executeUpdate("delete from messages where sender = '" + sender + "'");

@@ -57,7 +57,8 @@ public class Main {
 //                res.header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
 //                res.header("Access-Control-Allow-Origin", "Content-Type, Authorization, Content-Length, X-Requested-With");
 //                res.header("Access-Control-Allow-Credentials", "true");
-                return token;
+                res.header("token", token);
+                return "\""+realUser+token+"\"";
             } catch (Exception ex) {
                 return ex;
             }
@@ -73,7 +74,7 @@ public class Main {
             }
             String token = auth.generateToken(userinfo);
             res.header("token", token);
-            return token;
+            return "\""+token+newUser+"\"";
         });
 
 //        delete user by user name 
@@ -112,6 +113,19 @@ public class Main {
             } catch (Exception e) {
                 return e;
             }
+
+        });
+           post("/messages", (req, res) -> {
+            String token = req.body();
+            User isUser = auth.AuthenticateWithToken(userMySQLRepository, token);
+            if (isUser == null) {
+                res.status(401);
+                return "unauthenticated";
+            }
+            String userName = isUser.getUserName();
+            ArrayList<Message> allMessages = msgMYSQLRepository.getAllMessages(userName);
+            System.out.print("messages"+gson.toJson(allMessages));
+            return gson.toJson(allMessages);
 
         });
 
@@ -189,6 +203,7 @@ public class Main {
             return gson.toJson(allMessages);
 
         });
+       
     }
 
 }

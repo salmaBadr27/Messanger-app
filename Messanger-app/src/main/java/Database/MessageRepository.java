@@ -1,6 +1,7 @@
 package Database;
 
 import Models.Message;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 abstract public class MessageRepository {

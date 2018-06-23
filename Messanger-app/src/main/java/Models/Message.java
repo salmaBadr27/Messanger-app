@@ -1,5 +1,8 @@
 package Models;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+
 public class Message {
     // instances
 
@@ -7,13 +10,15 @@ public class Message {
     private String messageBody;
     private  String sender;
     private  String reciver;
+    private Timestamp created_at;
 
     //Constructors
-    public Message( String messageBody, String msgSender, String msgReciver) {
+    public Message( String messageBody, String msgSender, String msgReciver,Timestamp created_at) {
 
         this.messageBody = messageBody;
         this.sender = msgSender;
         this.reciver = msgReciver;
+        this.created_at = created_at;
     }
 
     public Message(String messageId, String messageBody, String sender, String reciver) {
