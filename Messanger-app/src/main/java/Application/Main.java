@@ -58,7 +58,8 @@ public class Main {
 //                res.header("Access-Control-Allow-Origin", "Content-Type, Authorization, Content-Length, X-Requested-With");
 //                res.header("Access-Control-Allow-Credentials", "true");
                 res.header("token", token);
-                return "\""+realUser+token+"\"";
+                realUser.setToken(token);
+                return gson.toJson(realUser);
             } catch (Exception ex) {
                 return ex;
             }
@@ -74,7 +75,8 @@ public class Main {
             }
             String token = auth.generateToken(userinfo);
             res.header("token", token);
-            return "\""+token+newUser+"\"";
+                newUser.setToken(token);
+                return gson.toJson(gson.toJson(newUser));
         });
 
 //        delete user by user name 
@@ -96,9 +98,10 @@ public class Main {
         });
 
         //get allusers
-        get("/Users", (req, res) -> {
+        post("/Users", (req, res) -> {
             try {
-                String token = req.headers("Authentication");
+                //String token = req.headers("Authentication");
+                String token = req.body();
                 System.out.println("token : " + token);
                 User isUser = auth.AuthenticateWithToken(userMySQLRepository, token);
                 System.out.println("isUser : " + isUser);

@@ -1,5 +1,7 @@
 package Models;
 
+import com.google.gson.Gson;
+
 public class User {
 
     //instances
@@ -8,6 +10,13 @@ public class User {
     private String password;
     private String e_mail;
     private String mobileNum;
+    private String token;
+    
+   
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 
     //user constructor
     public User(String userId, String userName, String password) {
@@ -56,7 +65,9 @@ public class User {
     public void setPassword(String Password) {
         this.password = Password;
     }
-    public String toString(){
-        return "user name=>"+ this.getUserName()+",password=>"+this.getPassword()+",email=>"+this.getE_mail()+",phone=>"+this.getMobileNum();
+
+    public String getToken() {
+        return token;
     }
+    
 }

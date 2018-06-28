@@ -26,8 +26,7 @@ public class MessagesMySQLRepository extends MessageRepository {
                 String msgBody = result.getString("Msg_body");
                 String sender = result.getString("sender");
                 String receiver = result.getString("receiver");
-                String created_at = result.getString("created_at");
-
+                Timestamp created_at = result.getTimestamp("created_at");
                 Message message = new Message(msgBody, sender, receiver,created_at);
                 totalMessages.add(message);
             }
@@ -111,7 +110,7 @@ public class MessagesMySQLRepository extends MessageRepository {
                 String msgBody = result.getString("Msg_body");
                 String msgSender = result.getString("sender");
                 String msgReceiver = result.getString("receiver");
-                String created_at = result.getString("created_at");
+                Timestamp created_at = result.getTimestamp("created_at");
                 Message sendedMessage = new Message(msgBody, msgSender, msgReceiver,created_at);
                 deletedMessages.add(sendedMessage);
             }
