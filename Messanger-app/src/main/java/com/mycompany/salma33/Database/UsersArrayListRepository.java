@@ -1,6 +1,6 @@
-package Database;
+package com.mycompany.salma33.Database;
 
-import Models.User;
+import com.mycompany.salma33.Models.User;
 import java.util.ArrayList;
 import java.util.UUID;
 

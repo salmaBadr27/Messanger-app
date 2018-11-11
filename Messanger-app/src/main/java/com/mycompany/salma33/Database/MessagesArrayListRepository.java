@@ -1,6 +1,6 @@
-package Database;
+package com.mycompany.salma33.Database;
 
-import Models.Message;
+import com.mycompany.salma33.Models.Message;
 import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.UUID;

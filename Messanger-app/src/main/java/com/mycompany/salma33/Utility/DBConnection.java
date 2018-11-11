@@ -1,4 +1,4 @@
-package Utility;
+package com.mycompany.salma33.Utility;
 
 import java.sql.*;
 

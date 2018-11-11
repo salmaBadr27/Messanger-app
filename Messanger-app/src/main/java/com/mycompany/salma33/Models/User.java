@@ -1,6 +1,4 @@
-package Models;
-
-import com.google.gson.Gson;
+package com.mycompany.salma33.Models;
 
 public class User {
 
@@ -24,6 +22,10 @@ public class User {
         this.userName = userName;
         this.password = password;
     }
+    
+    public User(String userName) {
+        this.userName = userName;
+    }
 
     public User(String userId, String userName, String password, String e_mail, String mobileNum) {
         this.userId = userId;
@@ -38,9 +40,7 @@ public class User {
         this.userName = UserName;
     }
 
-    public User(String userName) {
-        this.userName = userName;
-    }
+   
 
     //getters and setters
     public String getUserId() {
@@ -69,5 +69,6 @@ public class User {
     public String getToken() {
         return token;
     }
+
     
 }
